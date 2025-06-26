@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-config-values
+      author: sportybet
+      changes:
+        - insert:
+            tableName: config
+            columns:
+              - column: { name: config_key, value: 'openf1.sessions.url' }
+              - column: { name: config_value, value: 'https://api.openf1.org/v1/sessions' }
+
+        - insert:
+            tableName: config
+            columns:
+              - column: { name: config_key, value: 'openf1.drivers.url' }
+              - column: { name: config_value, value: 'https://api.openf1.org/v1/drivers' }
+        - insert:
+            tableName: config
+            columns:
+              - column: { name: config_key, value: 'f1.client' }
+              - column: { name: config_value, value: 'openf1' }

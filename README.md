@@ -31,77 +31,18 @@ This is a Spring Boot-based backend system that allows users to place bets on Fo
 
 ---
 
-## ⚙️ Configuration
 
-All configuration values are defined in `application.yml` located in `src/main/resources/`.
-
-Make sure you configure the following:
-
-### 1. Database:
-```yaml
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/f1_betting
-    username: your_db_user
-    password: your_db_password
-```
-
-### 2. JWT:
-```yaml
-jwt:
-  secret: your_jwt_secret_key
-  expiration: 86400000
-```
-
-### 3. OpenF1 API URLs (fetched from DB `config` table):
-```yaml
-external:
-  apis:
-    openf1:
-      sessions-url: https://api.openf1.org/v1/sessions
-      drivers-url: https://api.openf1.org/v1/drivers
-```
-
-### 4. RabbitMQ:
-```yaml
-spring:
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    queue:
-      eventOutcome: event-outcome-queue
-    exchange:
-      eventOutcome: event-outcome-exchange
-    routing-key:
-      eventOutcome: event.outcome
-```
-
----
-
-## 🗃️ Database Setup
-
-Uses Liquibase for DB migrations. The changelog files are located in:
-
-```
-src/main/resources/db/changelog/
-```
-
-You can add initial config rows and schema via `config-data.yaml`.
-
----
 
 ## ✅ Running Locally
 
 1. Clone the repository
-2. Set up MySQL and RabbitMQ
-3. Update `application.yml` with local credentials
-4. Run the Spring Boot app
+2. Start Docker on your local system
+3. Run following commands under root directory
 
 ```bash
-mvn clean install
-mvn spring-boot:run
+mvn clean install 
+docker-compose build --no-cache
+docker-compose up
 ```
 
 ---
@@ -117,7 +58,7 @@ mvn spring-boot:run
 
 POST `/api/f1/events/outcome`
 
-- Headers: `X-API-KEY: my-secret-api-key`
+- Headers: `X-API-KEY: openf1-key`
 - Body: Raw payload (JSON)
 
 Payload is stored in DB and forwarded to a RabbitMQ queue.
@@ -153,6 +94,10 @@ curl --location 'http://localhost:8080/auth/login' \
   "password": "pass123"
 }
 '
+
+#Fetch user details
+curl --location 'http://localhost:8080/api/user/details' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMiIsInJvbGVzIjpbeyJhdXRob3JpdHkiOiJVU0VSIn1dLCJpYXQiOjE3NTA5NTI1MzIsImV4cCI6MTc1MDk4ODUzMn0.mBFIhi3HkU3_CJTTuWKbDGD1ycp3Q5TEITLr2-BbkTM'
 
 
 # fetch sessions 

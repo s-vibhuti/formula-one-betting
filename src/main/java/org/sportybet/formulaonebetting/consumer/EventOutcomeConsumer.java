@@ -33,7 +33,7 @@ public class EventOutcomeConsumer {
             EventOutcomePayload outcome = objectMapper.readValue(rawMessage, EventOutcomePayload.class);
             log.info("Processing outcome for sessionKey={}, winner={}", outcome.getSessionKey(), outcome.getWinningDriverNumber());
 
-            List<Bet> bets = betRepository.findAllBySessionKey(outcome.getSessionKey());
+            List<Bet> bets = betRepository.findAllBySessionKeyAndStatus(outcome.getSessionKey(), BetStatus.PLACED);
 
             if (bets.isEmpty()) {
                 throw new BetProcessingException("No bets found for session: " + outcome.getSessionKey());

@@ -1,0 +1,107 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-users
+      author: sportybet
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: user_id
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  name: balance
+                  type: DECIMAL(19, 2)
+              - column:
+                  name: roles
+                  type: VARCHAR(255)
+
+  - changeSet:
+      id: 002-create-bets
+      author: sportybet
+      changes:
+        - createTable:
+            tableName: bets
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: session_key
+                  type: INT
+              - column:
+                  name: driver_number
+                  type: INT
+              - column:
+                  name: amount
+                  type: DECIMAL(19, 2)
+              - column:
+                  name: odds
+                  type: INT
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+              - column:
+                  name: placed_at
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            baseTableName: bets
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: user_id
+            constraintName: fk_bets_user_id
+
+  - changeSet:
+      id: 003-create-callback-event-payloads
+      author: sportybet
+      changes:
+        - createTable:
+            tableName: callback_event_payloads
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: raw_payload
+                  type: CLOB
+              - column:
+                  name: received_at
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 004-create-config
+      author: sportybet
+      changes:
+        - createTable:
+            tableName: config
+            columns:
+              - column:
+                  name: config_key
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: config_value
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false

@@ -3,6 +3,7 @@ package org.sportybet.formulaonebetting.services.impl;
 import org.sportybet.formulaonebetting.entities.User;
 import org.sportybet.formulaonebetting.model.CustomUserDetails;
 import org.sportybet.formulaonebetting.model.request.AuthRequest;
+import org.sportybet.formulaonebetting.model.response.UserDetailsResponse;
 import org.sportybet.formulaonebetting.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,5 +45,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         userRepository.save(user);
         return "User registered successfully";
+    }
+
+
+    public UserDetailsResponse getUserDetails(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return UserDetailsResponse.builder()
+                .userId(user.getUserId())
+                .balance(user.getBalance())
+                .build();
     }
 }
